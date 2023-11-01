@@ -64,6 +64,27 @@ bool IsEnumerationBone(const char* Name, IEntity* pExp, Vec3& vBonePos) {
 
     return true;
 }
+void DrawPlayerNames() //need add to menu btw
+{
+    IEntityIt* pEntityIt = gEnv->pEntitySystem->GetEntityIterator();
+    while (IEntity* pEntity = pEntityIt->Next())
+    {
+        if (IActor* pActor = gEnv->pGame->GetIGameFramework()->GetIActorSystem()->GetActor(pEntity->GetEntityId()))
+        {
+            if (pActor->IsDead())
+                continue;
+            
+            Vec3 playerPos = GetPlayerPos(pEntity);
+            Vec3 screenPos;
+            if (CustomW2S(playerPos, screenPos))
+            {
+                ImGui::GetBackgroundDrawList()->AddText(ImVec2(screenPos.x, screenPos.y), 
+                                                        IM_COL32(255, 255, 255, 255), pEntity->GetName());
+            }
+        }
+    }
+    pEntityIt->Release();
+}
 
 void entryPoint() {
     Vec3 obnylitt = ZERO;
